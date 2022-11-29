@@ -13,13 +13,12 @@ type User struct {
 	Role      string    `json:"role"`
 	CreatedAt time.Time `json:"created_at" gorm:"notNull"`
 	UpdatedAt time.Time `json:"updated_at" gorm:"notNull"`
-
-	
 }
 
 type UserUsecase interface {
 	Login(ctx context.Context, user *User) (token string, err error)
 	Register(ctx context.Context, user *User) (User, error)
+	RegisterAdmin(ctx context.Context, user *User) (User, error)
 	UpdateUser(ctx context.Context, user *User) (User, error)
 	DeleteUser(ctx context.Context, id int64) error
 }

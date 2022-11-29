@@ -21,7 +21,7 @@ func main() {
 	userUsecase := _usecase.NewUserUsecase(userRepository)
 
 	api := router.Group("/")
-	_handler.NewUserHanlder(api, userUsecase)
+	_handler.NewUserHandler(api, userUsecase)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"

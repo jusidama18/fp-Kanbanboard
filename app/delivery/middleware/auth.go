@@ -11,7 +11,8 @@ import (
 
 func Authentication() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		verifyToken, err := helper.VerifyToken(ctx)
+		headerToken := ctx.GetHeader("Authorization")
+		verifyToken, err := helper.VerifyToken(headerToken)
 		_ = verifyToken
 
 		if err != nil {
@@ -38,5 +39,54 @@ func Authorization(roles []string) gin.HandlerFunc {
 		ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 			"message": "you don't have access",
 		})
+	}
+}
+
+func authorizeRole(ctx *gin.Context) (any, error) {
+	headerToken := ctx.GetHeader("Authorization")
+	token, err := helper.VerifyToken(headerToken)
+	if err != nil {
+		return nil, err
+	}
+
+	userRole := token["role"]
+	return userRole, nil
+}
+
+func AuthorizeAdmin() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		role, err := authorizeRole(ctx)
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+				"message": "you don't have access",
+			})
+		}
+
+		if role != "admin" {
+			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+				"message": "you don't have access",
+			})
+		}
+
+		ctx.Next()
+	}
+}
+
+func AuthorizeMember() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		role, err := authorizeRole(ctx)
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+				"message": "you don't have access",
+			})
+		}
+
+		if role != "member" {
+			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+				"message": "you don't have access",
+			})
+		}
+
+		ctx.Next()
 	}
 }
