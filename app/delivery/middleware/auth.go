@@ -42,7 +42,7 @@ func Authorization(roles []string) gin.HandlerFunc {
 	}
 }
 
-func authorizeRole(ctx *gin.Context) (any, error) {
+func getRole(ctx *gin.Context) (any, error) {
 	headerToken := ctx.GetHeader("Authorization")
 	token, err := helper.VerifyToken(headerToken)
 	if err != nil {
@@ -55,17 +55,19 @@ func authorizeRole(ctx *gin.Context) (any, error) {
 
 func AuthorizeAdmin() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		role, err := authorizeRole(ctx)
+		role, err := getRole(ctx)
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 				"message": "you don't have access",
 			})
+			return
 		}
 
 		if role != "admin" {
 			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 				"message": "you don't have access",
 			})
+			return
 		}
 
 		ctx.Next()
@@ -74,17 +76,19 @@ func AuthorizeAdmin() gin.HandlerFunc {
 
 func AuthorizeMember() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		role, err := authorizeRole(ctx)
+		role, err := getRole(ctx)
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 				"message": "you don't have access",
 			})
+			return
 		}
 
 		if role != "member" {
 			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 				"message": "you don't have access",
 			})
+			return
 		}
 
 		ctx.Next()

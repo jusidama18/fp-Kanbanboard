@@ -16,7 +16,7 @@ type UserHandler struct {
 	userUsecase domain.UserUsecase
 }
 
-func NewUserHandler(r *gin.RouterGroup, userUsecase domain.UserUsecase) {
+func NewUserHandler(r *gin.Engine, userUsecase domain.UserUsecase) {
 	handler := &UserHandler{userUsecase}
 	r.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"message": "Hello World"})
