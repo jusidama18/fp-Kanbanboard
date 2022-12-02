@@ -16,13 +16,14 @@ type UserHandler struct {
 	userUsecase domain.UserUsecase
 }
 
-func NewUserHanlder(r *gin.RouterGroup, userUsecase domain.UserUsecase) {
+func NewUserHandler(r *gin.Engine, userUsecase domain.UserUsecase) {
 	handler := &UserHandler{userUsecase}
 	r.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"message": "Hello World"})
 	})
 	userRoute := r.Group("/users")
 	userRoute.POST("/register", handler.Register)
+	userRoute.POST("/register-admin", handler.RegisterAdmin) // For testing purpose
 	userRoute.POST("/login", handler.Login)
 	userRoute.Use(middleware.Authentication())
 	userRoute.PUT("/update-account", handler.UpdateAccount)
@@ -49,6 +50,41 @@ func (u *UserHandler) Register(ctx *gin.Context) {
 	var user domain.User
 	copier.Copy(&user, &userRegister)
 	userData, err := u.userUsecase.Register(ctx.Request.Context(), &user)
+	if err != nil {
+		ctx.JSON(getStatusCode(err), gin.H{"message": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusCreated, gin.H{
+		"code": http.StatusCreated,
+		"data": gin.H{
+			"id":         userData.ID,
+			"full_name":  userData.FullName,
+			"email":      userData.Email,
+			"created_at": userData.CreatedAt,
+		},
+	})
+}
+
+func (u *UserHandler) RegisterAdmin(ctx *gin.Context) {
+	type UserRegister struct {
+		FullName string `json:"full_name" validate:"required"`
+		Email    string `json:"email" validate:"required,email"`
+		Password string `json:"password" validate:"required,min=6,max=16"`
+	}
+	var userRegister UserRegister
+	err := ctx.ShouldBindJSON(&userRegister)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+	err = helper.ValidateStruct(userRegister)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+	var user domain.User
+	copier.Copy(&user, &userRegister)
+	userData, err := u.userUsecase.RegisterAdmin(ctx.Request.Context(), &user)
 	if err != nil {
 		ctx.JSON(getStatusCode(err), gin.H{"message": err.Error()})
 		return

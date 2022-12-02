@@ -7,7 +7,6 @@ import (
 	"Kanbanboard/domain"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-gonic/gin"
 )
 
 var secretKey = os.Getenv("JWT_SECRET_KEY")
@@ -24,8 +23,7 @@ func GenerateToken(id int64, role string) string {
 	return signedToken
 }
 
-func VerifyToken(c *gin.Context) (interface{}, error) {
-	headerToken := c.Request.Header.Get("Authorization")
+func VerifyToken(headerToken string) (jwt.MapClaims, error) {
 	bearer := strings.HasPrefix(headerToken, "Bearer")
 
 	if !bearer {
@@ -42,8 +40,11 @@ func VerifyToken(c *gin.Context) (interface{}, error) {
 		}
 		return []byte(secretKey), nil
 	})
-	if _, ok := token.Claims.(jwt.MapClaims); !ok && !token.Valid {
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok && !token.Valid {
 		return nil, domain.ErrUnauthorized
 	}
-	return token.Claims.(jwt.MapClaims), nil
+
+	return claims, nil
 }

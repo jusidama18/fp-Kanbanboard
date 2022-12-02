@@ -2,7 +2,7 @@ package helper
 
 import "golang.org/x/crypto/bcrypt"
 
-func HassPass(p string) string {
+func HashPass(p string) string {
 	salt := 10
 	password := []byte(p)
 	hash, _ := bcrypt.GenerateFromPassword(password, salt)

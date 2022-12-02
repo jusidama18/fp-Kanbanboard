@@ -20,8 +20,11 @@ func main() {
 	userRepository := _repository.NewUserRepository(db)
 	userUsecase := _usecase.NewUserUsecase(userRepository)
 
-	api := router.Group("/")
-	_handler.NewUserHanlder(api, userUsecase)
+	catRepository := _repository.NewCategoryRepository(db)
+	catUseCase := _usecase.NewCategoryUsecase(catRepository)
+
+	_handler.NewUserHandler(router, userUsecase)
+	_handler.NewCategoryHandler(router, catUseCase)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"

@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"Kanbanboard/app/helper"
@@ -37,10 +38,29 @@ func (u *UserUsecase) Register(ctx context.Context, user *domain.User) (domain.U
 		return domain.User{}, domain.ErrConflict
 	}
 
-	user.Password = helper.HassPass(user.Password)
-	user.Role = "user"
-	user.CreatedAt = time.Now()
-	user.UpdatedAt = time.Now()
+	user.Password = helper.HashPass(user.Password)
+	user.Role = "member"
+
+	userId, err := u.userRepository.StoreUser(ctx, user)
+	if err != nil {
+		return domain.User{}, domain.ErrInternalServerError
+	}
+	userData, err := u.userRepository.GetUserByID(ctx, userId)
+	if err != nil {
+		return domain.User{}, domain.ErrNotFound
+	}
+	return userData, nil
+}
+
+func (u *UserUsecase) RegisterAdmin(ctx context.Context, user *domain.User) (domain.User, error) {
+	fmt.Println("admin")
+	_, err := u.userRepository.GetUserByEmail(ctx, user.Email)
+	if err == nil {
+		return domain.User{}, domain.ErrConflict
+	}
+
+	user.Password = helper.HashPass(user.Password)
+	user.Role = "admin"
 
 	userId, err := u.userRepository.StoreUser(ctx, user)
 	if err != nil {
