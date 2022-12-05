@@ -34,3 +34,34 @@ func (t *taskService) CreateTask(req params.TaskCreate, userID int) (*domain.Cre
 
 	return respTask, nil
 }
+
+func (t *taskService) GetAllTasks() ([]domain.GetAllTasksResponse, error) {
+	tasks, err := t.repo.GetAllTasks()
+	if err != nil {
+		return nil, err
+	}
+	var respTasks []domain.GetAllTasksResponse
+	respTasks = parseGetAllTasks(tasks)
+
+	return respTasks, nil
+}
+
+func parseGetAllTasks(tasks []domain.Task) []domain.GetAllTasksResponse {
+	var respTasks []domain.GetAllTasksResponse
+	for i := 0; i < len(tasks); i++ {
+		respTask := domain.GetAllTasksResponse{}
+
+		respTask.ID = tasks[i].ID
+		respTask.Title = tasks[i].Title
+		respTask.Description = tasks[i].Description
+		respTask.Status = tasks[i].Status
+		respTask.UserID = tasks[i].UserID
+		respTask.CreatedAt = tasks[i].CreatedAt
+		respTask.User.ID = int(tasks[i].User.ID)
+		respTask.User.Email = tasks[i].User.Email
+		respTask.User.FullName = tasks[i].User.FullName
+		respTasks = append(respTasks, respTask)
+	}
+
+	return respTasks
+}

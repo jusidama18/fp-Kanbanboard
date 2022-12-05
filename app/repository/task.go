@@ -45,3 +45,13 @@ func (t *taskRepository) CreateTask(req params.TaskCreate, userID int) (*domain.
 
 	return &task, nil
 }
+
+func (t *taskRepository) GetAllTasks() ([]domain.Task, error) {
+	var tasks []domain.Task
+	err := t.db.Preload("User").Find(&tasks).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return tasks, nil
+}

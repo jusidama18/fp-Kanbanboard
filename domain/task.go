@@ -20,6 +20,12 @@ type Task struct {
 
 type TaskRepository interface {
 	CreateTask(params.TaskCreate, int) (*Task, error)
+	GetAllTasks() ([]Task, error)
+}
+
+type TaskUseCase interface {
+	CreateTask(params.TaskCreate, int) (*CreateTaskResponse, error)
+	GetAllTasks() ([]GetAllTasksResponse, error)
 }
 
 type CreateTaskResponse struct {
@@ -32,6 +38,17 @@ type CreateTaskResponse struct {
 	CreatedAt   time.Time `json:"created_at"`
 }
 
-type TaskUseCase interface {
-	CreateTask(params.TaskCreate, int) (*CreateTaskResponse, error)
+type GetAllTasksResponse struct {
+	ID          int       `json:"id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	Status      bool      `json:"status"`
+	UserID      int       `json:"user_id"`
+	CategoryID  int       `json:"category_id"`
+	CreatedAt   time.Time `json:"created_at"`
+	User        struct {
+		ID       int    `json:"id"`
+		Email    string `json:"email"`
+		FullName string `json:"full_name"`
+	} `json:"user"`
 }

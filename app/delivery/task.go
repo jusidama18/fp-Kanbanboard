@@ -24,6 +24,7 @@ func NewTaskController(r *gin.Engine, uc domain.TaskUseCase) {
 	taskRouter := r.Group("/tasks")
 	taskRouter.Use(middleware.Authorization([]string{"member", "admin"}))
 	taskRouter.POST("/", taskCtl.CreateTask)
+	taskRouter.GET("/", taskCtl.GetAllTasks)
 }
 
 func (t *TaskController) CreateTask(c *gin.Context) {
@@ -53,6 +54,15 @@ func (t *TaskController) CreateTask(c *gin.Context) {
 	}
 
 	responses.Success(c, http.StatusOK, "task created successfully", resp)
+}
+
+func (t *TaskController) GetAllTasks(c *gin.Context) {
+	resp, err := t.uc.GetAllTasks()
+	if err != nil {
+		responses.InternalServerError(c, err.Error())
+	}
+
+	responses.Success(c, http.StatusOK, "get all tasks successfully", resp)
 }
 
 func getUserID(c *gin.Context) (int, error) {

@@ -1,7 +1,9 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
+	"strings"
 
 	"Kanbanboard/app/helper"
 
@@ -52,6 +54,11 @@ func Authorization(roles []string) gin.HandlerFunc {
 
 func getToken(ctx *gin.Context) (jwt.MapClaims, error) {
 	headerToken := ctx.GetHeader("Authorization")
+	if !strings.HasPrefix(headerToken, "Bearer ") {
+		return nil, fmt.Errorf("Invalid token.")
+	}
+
+	headerToken = strings.Replace(headerToken, "Bearer ", "", -1)
 	token, err := helper.VerifyToken(headerToken)
 	if err != nil {
 		return nil, err
