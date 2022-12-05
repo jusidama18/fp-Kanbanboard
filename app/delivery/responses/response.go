@@ -41,7 +41,7 @@ func UnauthorizedRequest(c *gin.Context, msg string) {
 
 func Success(c *gin.Context, statusCode int, msg string, data ...interface{}) {
 	resp := &Response{
-		Data:    data,
+		Data:    data[0],
 		Message: msg,
 	}
 	c.JSON(statusCode, resp)
