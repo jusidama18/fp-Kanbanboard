@@ -28,7 +28,10 @@ func (u *UserUsecase) Login(ctx context.Context, user *domain.User) (token strin
 		err = domain.ErrUnauthorized
 		return
 	}
-	token = helper.GenerateToken(res.ID, res.Role)
+	token, err = helper.GenerateToken(res.ID, res.Role)
+	if err != nil {
+		return
+	}
 	return
 }
 
@@ -38,8 +41,11 @@ func (u *UserUsecase) Register(ctx context.Context, user *domain.User) (domain.U
 		return domain.User{}, domain.ErrConflict
 	}
 
-	user.Password = helper.HashPass(user.Password)
+	user.Password, err = helper.HashPass(user.Password)
 	user.Role = "member"
+	if err != nil {
+		return domain.User{}, domain.ErrInternalServerError
+	}
 
 	userId, err := u.userRepository.StoreUser(ctx, user)
 	if err != nil {
@@ -59,8 +65,11 @@ func (u *UserUsecase) RegisterAdmin(ctx context.Context, user *domain.User) (dom
 		return domain.User{}, domain.ErrConflict
 	}
 
-	user.Password = helper.HashPass(user.Password)
+	user.Password, err = helper.HashPass(user.Password)
 	user.Role = "admin"
+	if err != nil {
+		return domain.User{}, domain.ErrInternalServerError
+	}
 
 	userId, err := u.userRepository.StoreUser(ctx, user)
 	if err != nil {
