@@ -21,9 +21,9 @@ func NewCategoryHandler(r *gin.Engine, cat domain.CategoryUsecase) {
 		usecase: cat,
 	}
 	catRoute := r.Group("/categories")
-	catRoute.POST("/", middleware.AuthorizeAdmin(), catHandler.CreateCategory)
+	catRoute.POST("/", middleware.Authorization([]string{"admin"}), catHandler.CreateCategory)
 	catRoute.GET("/", catHandler.FindAllCategories)
-	catRoute.DELETE("/:id", middleware.AuthorizeAdmin(), catHandler.DeleteCategoryByID)
+	catRoute.DELETE("/:id", middleware.Authorization([]string{"admin"}), catHandler.DeleteCategoryByID)
 	catRoute.PATCH("/:id", catHandler.UpdateCategoryByID)
 }
 
@@ -74,7 +74,7 @@ func (cat *CategoryHandler) DeleteCategoryByID(c *gin.Context) {
 		return
 	}
 
-	responses.Success(c, http.StatusOK, "Category has been successfully deleted")
+	responses.Success(c, http.StatusOK, "Category has been successfully deleted", nil)
 }
 
 func (cat *CategoryHandler) UpdateCategoryByID(c *gin.Context) {

@@ -23,8 +23,12 @@ func main() {
 	catRepository := _repository.NewCategoryRepository(db)
 	catUseCase := _usecase.NewCategoryUsecase(catRepository)
 
+	taskRepository := _repository.NewTaskRepository(db)
+	taskUseCase := _usecase.NewTaskService(taskRepository)
+
 	_handler.NewUserHandler(router, userUsecase)
 	_handler.NewCategoryHandler(router, catUseCase)
+	_handler.NewTaskController(router, taskUseCase)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
