@@ -57,6 +57,7 @@ func parseGetAllTasks(tasks []domain.Task) []domain.GetAllTasksResponse {
 		respTask.Status = tasks[i].Status
 		respTask.UserID = tasks[i].UserID
 		respTask.CreatedAt = tasks[i].CreatedAt
+		respTask.CategoryID = tasks[i].CategoryID
 		respTask.User.ID = int(tasks[i].User.ID)
 		respTask.User.Email = tasks[i].User.Email
 		respTask.User.FullName = tasks[i].User.FullName
