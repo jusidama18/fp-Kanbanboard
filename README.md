@@ -21,3 +21,7 @@
 | Endpoint   | PATCH /categories/:id         | M Rifqi Al Furqon |
 | Endpoint   | GET /tasks         | M Rifqi Al Furqon |
 | Endpoint   | POST /tasks         | M Rifqi Al Furqon |
+| Endpoint   | PUT /tasks/:id         | Juan Simon Damanik |
+| Endpoint   | PATCH /tasks/update-status/:id         | Juan Simon Damanik |
+| Endpoint   | PATCH /tasks/update-category/:id         | Juan Simon Damanik |
+| Endpoint   | DELETE /tasks/:id         | Juan Simon Damanik |
