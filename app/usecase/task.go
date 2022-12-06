@@ -68,7 +68,7 @@ func parseGetAllTasks(tasks []domain.Task) []domain.GetAllTasksResponse {
 	return respTasks
 }
 
-func (t *taskService) PutTask(id int, req params.TaskPutByID) (*domain.Task, error) {
+func (t *taskService) PutTask(id int, req params.TaskPutByID) (*domain.TaskResponse, error) {
 	data, err := t.repo.FindTaskByID(id)
 	if err != nil {
 		return nil, err
@@ -84,10 +84,18 @@ func (t *taskService) PutTask(id int, req params.TaskPutByID) (*domain.Task, err
 	if err != nil {
 		return nil, err
 	}
-	return res, nil
+	return &domain.TaskResponse{
+		ID:          res.ID,
+		Title:       res.Title,
+		Description: res.Description,
+		Status:      res.Status,
+		UserID:      res.UserID,
+		CategoryID:  res.CategoryID,
+		UpdatedAt:   res.UpdatedAt,
+	}, nil
 }
 
-func (t *taskService) PatchTaskStatus(id int, req params.TaskUpdateStatus) (*domain.Task, error) {
+func (t *taskService) PatchTaskStatus(id int, req params.TaskUpdateStatus) (*domain.TaskResponse, error) {
 	data, err := t.repo.FindTaskByID(id)
 	if err != nil {
 		return nil, err
@@ -103,10 +111,18 @@ func (t *taskService) PatchTaskStatus(id int, req params.TaskUpdateStatus) (*dom
 	if err != nil {
 		return nil, err
 	}
-	return res, nil
+	return &domain.TaskResponse{
+		ID:          res.ID,
+		Title:       res.Title,
+		Description: res.Description,
+		Status:      res.Status,
+		UserID:      res.UserID,
+		CategoryID:  res.CategoryID,
+		UpdatedAt:   res.UpdatedAt,
+	}, nil
 }
 
-func (t *taskService) PatchTaskCategory(id int, req params.TaskUpdateCategory) (*domain.Task, error) {
+func (t *taskService) PatchTaskCategory(id int, req params.TaskUpdateCategory) (*domain.TaskResponse, error) {
 	data, err := t.repo.FindTaskByID(id)
 	if err != nil {
 		return nil, err
@@ -122,20 +138,28 @@ func (t *taskService) PatchTaskCategory(id int, req params.TaskUpdateCategory) (
 	if err != nil {
 		return nil, err
 	}
-	return res, nil
+	return &domain.TaskResponse{
+		ID:          res.ID,
+		Title:       res.Title,
+		Description: res.Description,
+		Status:      res.Status,
+		UserID:      res.UserID,
+		CategoryID:  res.CategoryID,
+		UpdatedAt:   res.UpdatedAt,
+	}, nil
 }
 
-func (t *taskService) DeleteTask(id int) (*domain.Task, error) {
+func (t *taskService) DeleteTask(id int) error {
 	data, err := t.repo.FindTaskByID(id)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	if data.ID == 0 {
-		return nil, fmt.Errorf("task not found")
+		return fmt.Errorf("task not found")
 	}
-	res, err := t.repo.DeleteTask(id)
-	if err != nil {
-		return nil, err
+	_, err2 := t.repo.DeleteTask(id)
+	if err2 != nil {
+		return err2
 	}
-	return res, nil
+	return nil
 }

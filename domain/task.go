@@ -29,6 +29,10 @@ type TaskRepository interface {
 type TaskUseCase interface {
 	CreateTask(params.TaskCreate, int) (*CreateTaskResponse, error)
 	GetAllTasks() ([]GetAllTasksResponse, error)
+	PutTask(int, params.TaskPutByID) (*TaskResponse, error)
+	PatchTaskStatus(int, params.TaskUpdateStatus) (*TaskResponse, error)
+	PatchTaskCategory(int, params.TaskUpdateCategory) (*TaskResponse, error)
+	DeleteTask(int) error
 }
 
 type CreateTaskResponse struct {
@@ -54,4 +58,14 @@ type GetAllTasksResponse struct {
 		Email    string `json:"email"`
 		FullName string `json:"full_name"`
 	} `json:"user"`
+}
+
+type TaskResponse struct {
+	ID          int       `json:"id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	Status      bool      `json:"status"`
+	UserID      int       `json:"user_id"`
+	CategoryID  int       `json:"category_id"`
+	UpdatedAt   time.Time `json:"created_at"`
 }
