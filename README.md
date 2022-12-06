@@ -25,3 +25,6 @@
 | Endpoint   | PATCH /tasks/update-status/:id         | Juan Simon Damanik |
 | Endpoint   | PATCH /tasks/update-category/:id         | Juan Simon Damanik |
 | Endpoint   | DELETE /tasks/:id         | Juan Simon Damanik |
+
+## Deployment
+Projek dideploy di Railway dengan link berikut [https://fp-kanbanboard-production.up.railway.app/](https://fp-kanbanboard-production.up.railway.app/)
