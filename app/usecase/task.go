@@ -124,3 +124,18 @@ func (t *taskService) PatchTaskCategory(id int, req params.TaskUpdateCategory) (
 	}
 	return res, nil
 }
+
+func (t *taskService) DeleteTask(id int) (*domain.Task, error) {
+	data, err := t.repo.FindTaskByID(id)
+	if err != nil {
+		return nil, err
+	}
+	if data.ID == 0 {
+		return nil, fmt.Errorf("task not found")
+	}
+	res, err := t.repo.DeleteTask(id)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
