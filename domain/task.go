@@ -21,6 +21,9 @@ type Task struct {
 type TaskRepository interface {
 	CreateTask(params.TaskCreate, int) (*Task, error)
 	GetAllTasks() ([]Task, error)
+	FindTaskByID(int) (*Task, error)
+	UpdateTask(int, *Task) (*Task, error)
+	DeleteTask(int) (*Task, error)
 }
 
 type TaskUseCase interface {

@@ -3,6 +3,7 @@ package usecase
 import (
 	"Kanbanboard/app/delivery/params"
 	"Kanbanboard/domain"
+	"fmt"
 )
 
 type taskService struct {
@@ -65,4 +66,61 @@ func parseGetAllTasks(tasks []domain.Task) []domain.GetAllTasksResponse {
 	}
 
 	return respTasks
+}
+
+func (t *taskService) PutTask(id int, req params.TaskPutByID) (*domain.Task, error) {
+	data, err := t.repo.FindTaskByID(id)
+	if err != nil {
+		return nil, err
+	}
+	if data.ID == 0 {
+		return nil, fmt.Errorf("task not found")
+	}
+	task := &domain.Task{
+		Title:       req.Title,
+		Description: req.Description,
+	}
+	res, err := t.repo.UpdateTask(id, task)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (t *taskService) PatchTaskStatus(id int, req params.TaskUpdateStatus) (*domain.Task, error) {
+	data, err := t.repo.FindTaskByID(id)
+	if err != nil {
+		return nil, err
+	}
+	if data.ID == 0 {
+		return nil, fmt.Errorf("task not found")
+	}
+
+	task := &domain.Task{
+		Status: req.Status,
+	}
+	res, err := t.repo.UpdateTask(id, task)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (t *taskService) PatchTaskCategory(id int, req params.TaskUpdateCategory) (*domain.Task, error) {
+	data, err := t.repo.FindTaskByID(id)
+	if err != nil {
+		return nil, err
+	}
+	if data.ID == 0 {
+		return nil, fmt.Errorf("task not found")
+	}
+
+	task := &domain.Task{
+		CategoryID: req.CategoryID,
+	}
+	res, err := t.repo.UpdateTask(id, task)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }

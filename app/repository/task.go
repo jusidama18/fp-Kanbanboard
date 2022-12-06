@@ -55,3 +55,34 @@ func (t *taskRepository) GetAllTasks() ([]domain.Task, error) {
 
 	return tasks, nil
 }
+
+func (r *taskRepository) FindTaskByID(id int) (*domain.Task, error) {
+	var task domain.Task
+
+	err := r.db.Preload("User").Where("id = ?", id).Find(&task).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &task, nil
+}
+
+func (r *taskRepository) UpdateTask(id int, task *domain.Task) (*domain.Task, error) {
+	err := r.db.Preload("User").Where("id = ?", id).Updates(&task).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return task, nil
+}
+
+func (r *taskRepository) DeleteTask(id int) (*domain.Task, error) {
+	var task domain.Task
+
+	err := r.db.Where("id = ?", id).Delete(&task).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &task, nil
+}

@@ -29,6 +29,7 @@ func main() {
 	_handler.NewUserHandler(router, userUsecase)
 	_handler.NewCategoryHandler(router, catUseCase)
 	_handler.NewTaskController(router, taskUseCase)
+	
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
