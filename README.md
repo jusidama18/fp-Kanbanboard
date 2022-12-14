@@ -33,7 +33,7 @@ Projek dideploy di Railway dengan link berikut [https://fp-kanbanboard-productio
 ### Locally
 - Clone this repo
 ```
-git clone https://github.com/jusidama18/mygram-api-go/
+git clone https://github.com/DionFauzi/fp-Kanbanboard
 ```
 - Run PostgreSQL Docker script
 ```
