@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	"Kanbanboard/app/delivery/middleware"
+	"Kanbanboard/app/delivery/params"
+	"Kanbanboard/app/delivery/responses"
 	"Kanbanboard/app/helper"
 	"Kanbanboard/domain"
 
@@ -30,122 +32,114 @@ func NewUserHandler(r *gin.Engine, userUsecase domain.UserUsecase) {
 	userRoute.DELETE("/delete-account", handler.DeleteAccount)
 }
 
+// @Summary Register New User
+// @Description Register New User by Data Provided
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param mygram body params.UserRegister true "Register User"
+// @Success 200 {object} responses.Response{data=domain.User}
+// @Router /users/register [post]
 func (u *UserHandler) Register(ctx *gin.Context) {
-	type UserRegister struct {
-		FullName string `json:"full_name" validate:"required"`
-		Email    string `json:"email" validate:"required,email"`
-		Password string `json:"password" validate:"required,min=6,max=16"`
-	}
-	var userRegister UserRegister
+	var userRegister params.UserRegister
 	err := ctx.ShouldBindJSON(&userRegister)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		responses.BadRequestError(ctx, err.Error())
 		return
 	}
 	err = helper.ValidateStruct(userRegister)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		responses.BadRequestError(ctx, err.Error())
 		return
 	}
 	var user domain.User
 	copier.Copy(&user, &userRegister)
 	userData, err := u.userUsecase.Register(ctx.Request.Context(), &user)
 	if err != nil {
-		ctx.JSON(getStatusCode(err), gin.H{"message": err.Error()})
+		responses.Success(ctx, getStatusCode(err), err.Error(), "")
 		return
 	}
-	ctx.JSON(http.StatusCreated, gin.H{
-		"code": http.StatusCreated,
-		"data": gin.H{
-			"id":         userData.ID,
-			"full_name":  userData.FullName,
-			"email":      userData.Email,
-			"created_at": userData.CreatedAt,
-		},
-	})
+	responses.Success(ctx, http.StatusCreated, "User Registered.", userData)
 }
 
+// @Summary Register New Admin
+// @Description Register New Admin by Data Provided
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param mygram body params.UserRegister true "Register Admin"
+// @Success 200 {object} responses.Response{data=domain.User}
+// @Router /users/register-admin [post]
 func (u *UserHandler) RegisterAdmin(ctx *gin.Context) {
-	type UserRegister struct {
-		FullName string `json:"full_name" validate:"required"`
-		Email    string `json:"email" validate:"required,email"`
-		Password string `json:"password" validate:"required,min=6,max=16"`
-	}
-	var userRegister UserRegister
+	var userRegister params.UserRegister
 	err := ctx.ShouldBindJSON(&userRegister)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		responses.BadRequestError(ctx, err.Error())
 		return
 	}
 	err = helper.ValidateStruct(userRegister)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		responses.BadRequestError(ctx, err.Error())
 		return
 	}
 	var user domain.User
 	copier.Copy(&user, &userRegister)
 	userData, err := u.userUsecase.RegisterAdmin(ctx.Request.Context(), &user)
 	if err != nil {
-		ctx.JSON(getStatusCode(err), gin.H{"message": err.Error()})
+		responses.Success(ctx, getStatusCode(err), err.Error(), "")
 		return
 	}
-	ctx.JSON(http.StatusCreated, gin.H{
-		"code": http.StatusCreated,
-		"data": gin.H{
-			"id":         userData.ID,
-			"full_name":  userData.FullName,
-			"email":      userData.Email,
-			"created_at": userData.CreatedAt,
-		},
-	})
+	responses.Success(ctx, http.StatusCreated, "Admin Created.", userData)
 }
 
+// @Summary Login Account
+// @Description Login Account by Data Provided
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param mygram body params.UserLogin true "Login Account"
+// @Success 200 {object} responses.Response{data=string}
+// @Router /users/login [post]
 func (u *UserHandler) Login(ctx *gin.Context) {
-	type UserLogin struct {
-		Email    string `json:"email" validate:"required,email"`
-		Password string `json:"password" validate:"required"`
-	}
-	var userLogin UserLogin
+	var userLogin params.UserLogin
 	err := ctx.ShouldBindJSON(&userLogin)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		responses.BadRequestError(ctx, err.Error())
 		return
 	}
 	err = helper.ValidateStruct(userLogin)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		responses.BadRequestError(ctx, err.Error())
 		return
 	}
 	var user domain.User
 	copier.Copy(&user, &userLogin)
 	token, err := u.userUsecase.Login(ctx.Request.Context(), &user)
 	if err != nil {
-		ctx.JSON(getStatusCode(err), gin.H{"message": err.Error()})
+		responses.Success(ctx, getStatusCode(err), err.Error(), "")
 		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{
-		"status": http.StatusOK,
-		"data": gin.H{
-			"token": token,
-		},
-	})
-
+	responses.Success(ctx, http.StatusOK, "Login Success.", token)
 }
 
+// @Summary Update Account
+// @Description Update User by Data Provided
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param mygram body params.UserUpdate true "Update User"
+// @Success 200 {object} responses.Response{data=domain.User}
+// @Router /users/update-account [put]
 func (u *UserHandler) UpdateAccount(ctx *gin.Context) {
-	type UserUpdate struct {
-		FullName string `json:"full_name" validate:"required"`
-		Email    string `json:"email" validate:"required,email"`
-	}
-	var userUpdate UserUpdate
+	var userUpdate params.UserUpdate
 	err := ctx.ShouldBindJSON(&userUpdate)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		responses.BadRequestError(ctx, err.Error())
 		return
 	}
 	err = helper.ValidateStruct(userUpdate)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		responses.BadRequestError(ctx, err.Error())
 		return
 	}
 	var user domain.User
@@ -155,29 +149,28 @@ func (u *UserHandler) UpdateAccount(ctx *gin.Context) {
 	user.ID = userID
 	userData, err := u.userUsecase.UpdateUser(ctx.Request.Context(), &user)
 	if err != nil {
-		ctx.JSON(getStatusCode(err), gin.H{"message": err.Error()})
+		responses.Success(ctx, getStatusCode(err), err.Error(), "")
 		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{
-		"status": http.StatusOK,
-		"data": gin.H{
-			"id":         userData.ID,
-			"full_name":  userData.FullName,
-			"email":      userData.Email,
-			"updated_at": userData.UpdatedAt,
-		},
-	})
+	responses.Success(ctx, http.StatusOK, "Account Updated.", userData)
 }
 
+// @Summary Delete User
+// @Description Delete User through the authentication process must be done with the help of JsonWebToken.
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Success 200 {object} responses.Response{data=string}
+// @Router /users/delete-account [delete]
 func (u *UserHandler) DeleteAccount(ctx *gin.Context) {
 	userAuth := ctx.MustGet("user").(jwt.MapClaims)
 	userID := int64(userAuth["id"].(float64))
 	err := u.userUsecase.DeleteUser(ctx, userID)
 	if err != nil {
-		ctx.JSON(getStatusCode(err), gin.H{"message": err.Error()})
+		responses.Success(ctx, getStatusCode(err), err.Error(), "")
 		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{"message": "your account has been successfully deleted"})
+	responses.Success(ctx, http.StatusOK, "Your account has been successfully deleted.", "")
 }
 
 func getStatusCode(err error) int {

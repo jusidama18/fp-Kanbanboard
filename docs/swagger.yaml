@@ -1,4 +1,161 @@
 basePath: /
+definitions:
+  domain.CreateTaskResponse:
+    properties:
+      category_id:
+        type: integer
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      status:
+        type: boolean
+      title:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  domain.GetAllTasksResponse:
+    properties:
+      category_id:
+        type: integer
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      status:
+        type: boolean
+      title:
+        type: string
+      user:
+        properties:
+          email:
+            type: string
+          full_name:
+            type: string
+          id:
+            type: integer
+        type: object
+      user_id:
+        type: integer
+    type: object
+  domain.TaskResponse:
+    properties:
+      category_id:
+        type: integer
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      status:
+        type: boolean
+      title:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  domain.User:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      role:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  params.TaskCreate:
+    properties:
+      category_id:
+        type: integer
+      description:
+        type: string
+      title:
+        type: string
+    required:
+    - category_id
+    - description
+    - title
+    type: object
+  params.TaskPutByID:
+    properties:
+      description:
+        type: string
+      title:
+        type: string
+    required:
+    - description
+    - title
+    type: object
+  params.TaskUpdateCategory:
+    properties:
+      category_id:
+        type: integer
+    required:
+    - category_id
+    type: object
+  params.TaskUpdateStatus:
+    properties:
+      status:
+        type: boolean
+    required:
+    - status
+    type: object
+  params.UserLogin:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  params.UserRegister:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      password:
+        maxLength: 16
+        minLength: 6
+        type: string
+    required:
+    - email
+    - full_name
+    - password
+    type: object
+  params.UserUpdate:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+    required:
+    - email
+    - full_name
+    type: object
+  responses.Response:
+    properties:
+      data: {}
+      error: {}
+      message:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -11,5 +168,303 @@ info:
   termsOfService: http://swagger.io/terms/
   title: Mygram-API
   version: "1.0"
-paths: {}
+paths:
+  /tasks:
+    get:
+      consumes:
+      - application/json
+      description: Get All Task
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/domain.GetAllTasksResponse'
+                  type: array
+              type: object
+      summary: Get All Task
+      tags:
+      - Tasks
+    post:
+      consumes:
+      - application/json
+      description: Create Task by Data Provided
+      parameters:
+      - description: Create Task
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/params.TaskCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.CreateTaskResponse'
+              type: object
+      summary: Create Task
+      tags:
+      - Tasks
+  /tasks/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Task by Data Provided
+      parameters:
+      - description: Delete Task
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Delete Task
+      tags:
+      - Tasks
+    put:
+      consumes:
+      - application/json
+      description: Put Task by Data Provided
+      parameters:
+      - description: Put Task
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/params.TaskPutByID'
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.TaskResponse'
+              type: object
+      summary: Put Task
+      tags:
+      - Tasks
+  /tasks/update-category/{id}:
+    patch:
+      consumes:
+      - application/json
+      description: Patch Task Category by Data Provided
+      parameters:
+      - description: Patch Task Category
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/params.TaskUpdateCategory'
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.TaskResponse'
+              type: object
+      summary: Patch Task Category
+      tags:
+      - Tasks
+  /tasks/update-status/{id}:
+    patch:
+      consumes:
+      - application/json
+      description: Patch Task Status by Data Provided
+      parameters:
+      - description: Patch Task Status
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/params.TaskUpdateStatus'
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.TaskResponse'
+              type: object
+      summary: Patch Task Status
+      tags:
+      - Tasks
+  /users/delete-account:
+    delete:
+      consumes:
+      - application/json
+      description: Delete User through the authentication process must be done with
+        the help of JsonWebToken.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Delete User
+      tags:
+      - Users
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Login Account by Data Provided
+      parameters:
+      - description: Login Account
+        in: body
+        name: mygram
+        required: true
+        schema:
+          $ref: '#/definitions/params.UserLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Login Account
+      tags:
+      - Users
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: Register New User by Data Provided
+      parameters:
+      - description: Register User
+        in: body
+        name: mygram
+        required: true
+        schema:
+          $ref: '#/definitions/params.UserRegister'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.User'
+              type: object
+      summary: Register New User
+      tags:
+      - Users
+  /users/register-admin:
+    post:
+      consumes:
+      - application/json
+      description: Register New Admin by Data Provided
+      parameters:
+      - description: Register Admin
+        in: body
+        name: mygram
+        required: true
+        schema:
+          $ref: '#/definitions/params.UserRegister'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.User'
+              type: object
+      summary: Register New Admin
+      tags:
+      - Users
+  /users/update-account:
+    put:
+      consumes:
+      - application/json
+      description: Update User by Data Provided
+      parameters:
+      - description: Update User
+        in: body
+        name: mygram
+        required: true
+        schema:
+          $ref: '#/definitions/params.UserUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.User'
+              type: object
+      summary: Update Account
+      tags:
+      - Users
 swagger: "2.0"
