@@ -10,8 +10,20 @@ import (
 	"Kanbanboard/config"
 
 	"github.com/gin-gonic/gin"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+// @title Mygram-API
+// @version 1.0
+// @description This is a API webservice to manage mygram API
+// @termsOfService http://swagger.io/terms/
+// @contact.name API Support
+// @contact.email hacktiv@swagger.io
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+// @host localhost:8080
+// @BasePath /
 func main() {
 	router := gin.Default()
 	config.StartDB()
@@ -29,7 +41,7 @@ func main() {
 	_handler.NewUserHandler(router, userUsecase)
 	_handler.NewCategoryHandler(router, catUseCase)
 	_handler.NewTaskController(router, taskUseCase)
-	
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
