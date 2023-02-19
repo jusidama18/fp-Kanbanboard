@@ -10,7 +10,7 @@ import (
 	"Kanbanboard/config"
 
 	"github.com/gin-gonic/gin"
-	_ "github.com/jusidama18/mygram-api-go/docs"
+	_ "Kanbanboard/docs"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
