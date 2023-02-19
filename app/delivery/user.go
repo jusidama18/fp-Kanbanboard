@@ -37,7 +37,7 @@ func NewUserHandler(r *gin.Engine, userUsecase domain.UserUsecase) {
 // @Tags Users
 // @Accept json
 // @Produce json
-// @Param mygram body params.UserRegister true "Register User"
+// @Param data body params.UserRegister true "Register User"
 // @Success 200 {object} responses.Response{data=domain.User}
 // @Router /users/register [post]
 func (u *UserHandler) Register(ctx *gin.Context) {
@@ -67,7 +67,7 @@ func (u *UserHandler) Register(ctx *gin.Context) {
 // @Tags Users
 // @Accept json
 // @Produce json
-// @Param mygram body params.UserRegister true "Register Admin"
+// @Param data body params.UserRegister true "Register Admin"
 // @Success 200 {object} responses.Response{data=domain.User}
 // @Router /users/register-admin [post]
 func (u *UserHandler) RegisterAdmin(ctx *gin.Context) {
@@ -97,7 +97,7 @@ func (u *UserHandler) RegisterAdmin(ctx *gin.Context) {
 // @Tags Users
 // @Accept json
 // @Produce json
-// @Param mygram body params.UserLogin true "Login Account"
+// @Param data body params.UserLogin true "Login Account"
 // @Success 200 {object} responses.Response{data=string}
 // @Router /users/login [post]
 func (u *UserHandler) Login(ctx *gin.Context) {
@@ -127,7 +127,7 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 // @Tags Users
 // @Accept json
 // @Produce json
-// @Param mygram body params.UserUpdate true "Update User"
+// @Param data body params.UserUpdate true "Update User"
 // @Success 200 {object} responses.Response{data=domain.User}
 // @Router /users/update-account [put]
 func (u *UserHandler) UpdateAccount(ctx *gin.Context) {
