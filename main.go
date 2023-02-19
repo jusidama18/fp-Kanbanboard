@@ -42,7 +42,8 @@ func main() {
 	_handler.NewCategoryHandler(router, catUseCase)
 	_handler.NewTaskController(router, taskUseCase)
 
-	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	docs := router.Group("/docs")
+	docs.GET("/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	port := os.Getenv("PORT")
 	if port == "" {
