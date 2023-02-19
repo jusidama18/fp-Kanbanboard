@@ -213,7 +213,6 @@ definitions:
       message:
         type: string
     type: object
-host: localhost:8080
 info:
   contact:
     email: hacktiv@swagger.io
@@ -529,7 +528,7 @@ paths:
       parameters:
       - description: Login Account
         in: body
-        name: mygram
+        name: data
         required: true
         schema:
           $ref: '#/definitions/params.UserLogin'
@@ -556,7 +555,7 @@ paths:
       parameters:
       - description: Register User
         in: body
-        name: mygram
+        name: data
         required: true
         schema:
           $ref: '#/definitions/params.UserRegister'
@@ -583,7 +582,7 @@ paths:
       parameters:
       - description: Register Admin
         in: body
-        name: mygram
+        name: data
         required: true
         schema:
           $ref: '#/definitions/params.UserRegister'
@@ -610,7 +609,7 @@ paths:
       parameters:
       - description: Update User
         in: body
-        name: mygram
+        name: data
         required: true
         schema:
           $ref: '#/definitions/params.UserUpdate'

@@ -14,7 +14,6 @@
         },
         "version": "1.0"
     },
-    "host": "localhost:8080",
     "basePath": "/",
     "paths": {
         "/categories": {
@@ -528,7 +527,7 @@
                 "parameters": [
                     {
                         "description": "Login Account",
-                        "name": "mygram",
+                        "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -574,7 +573,7 @@
                 "parameters": [
                     {
                         "description": "Register User",
-                        "name": "mygram",
+                        "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -620,7 +619,7 @@
                 "parameters": [
                     {
                         "description": "Register Admin",
-                        "name": "mygram",
+                        "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -666,7 +665,7 @@
                 "parameters": [
                     {
                         "description": "Update User",
-                        "name": "mygram",
+                        "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {

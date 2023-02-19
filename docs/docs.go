@@ -534,7 +534,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Login Account",
-                        "name": "mygram",
+                        "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -580,7 +580,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Register User",
-                        "name": "mygram",
+                        "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -626,7 +626,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Register Admin",
-                        "name": "mygram",
+                        "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -672,7 +672,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Update User",
-                        "name": "mygram",
+                        "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -1033,7 +1033,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8080",
+	Host:             "",
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "KanBanBoard-API",
