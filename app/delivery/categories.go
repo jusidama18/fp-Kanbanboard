@@ -27,6 +27,14 @@ func NewCategoryHandler(r *gin.Engine, cat domain.CategoryUsecase) {
 	catRoute.PATCH("/:id", catHandler.UpdateCategoryByID)
 }
 
+// @Summary Create Category
+// @Description Create Category by Data Provided
+// @Tags Categories
+// @Accept json
+// @Produce json
+// @Param data body params.CategoryCreate true "Create Category"
+// @Success 200 {object} responses.Response{data=domain.Category}
+// @Router /categories [post]
 func (cat *CategoryHandler) CreateCategory(c *gin.Context) {
 	var req params.CategoryCreate
 
@@ -51,6 +59,13 @@ func (cat *CategoryHandler) CreateCategory(c *gin.Context) {
 	responses.Success(c, http.StatusCreated, "category successfully created", respCategory)
 }
 
+// @Summary Get All Category
+// @Description Get All Category
+// @Tags Categories
+// @Accept json
+// @Produce json
+// @Success 200 {object} responses.Response{data=[]domain.Category}
+// @Router /categories [get]
 func (cat *CategoryHandler) FindAllCategories(c *gin.Context) {
 	categories, err := cat.usecase.FindAllCategories()
 	if err != nil {
@@ -61,6 +76,14 @@ func (cat *CategoryHandler) FindAllCategories(c *gin.Context) {
 	responses.Success(c, http.StatusOK, "successfully get all data", categories)
 }
 
+// @Summary Delete Category
+// @Description Delete Category by Data Provided
+// @Tags Categories
+// @Accept json
+// @Produce json
+// @Param id path int true "Delete Category"
+// @Success 200 {object} responses.Response{data=string}
+// @Router /categories/{id} [delete]
 func (cat *CategoryHandler) DeleteCategoryByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -77,6 +100,15 @@ func (cat *CategoryHandler) DeleteCategoryByID(c *gin.Context) {
 	responses.Success(c, http.StatusOK, "Category has been successfully deleted", nil)
 }
 
+// @Summary Patch Category
+// @Description Patch Category by Data Provided
+// @Tags Categories
+// @Accept json
+// @Produce json
+// @Param data body params.CategoryUpdate true "Patch Task Category"
+// @Param id path int true "Category ID"
+// @Success 200 {object} responses.Response{data=domain.CategoryUpdateResponse}
+// @Router /categories/{id} [patch]
 func (cat *CategoryHandler) UpdateCategoryByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

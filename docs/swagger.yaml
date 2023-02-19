@@ -1,5 +1,29 @@
 basePath: /
 definitions:
+  domain.Category:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      tasks:
+        items:
+          $ref: '#/definitions/domain.Task'
+        type: array
+      type:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  domain.CategoryUpdateResponse:
+    properties:
+      id:
+        type: integer
+      type:
+        type: string
+      updated_at:
+        type: string
+    type: object
   domain.CreateTaskResponse:
     properties:
       category_id:
@@ -43,6 +67,25 @@ definitions:
       user_id:
         type: integer
     type: object
+  domain.Task:
+    properties:
+      category_id:
+        type: integer
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      status:
+        type: boolean
+      title:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
   domain.TaskResponse:
     properties:
       category_id:
@@ -76,6 +119,20 @@ definitions:
         type: string
       updated_at:
         type: string
+    type: object
+  params.CategoryCreate:
+    properties:
+      type:
+        type: string
+    required:
+    - type
+    type: object
+  params.CategoryUpdate:
+    properties:
+      type:
+        type: string
+    required:
+    - type
     type: object
   params.TaskCreate:
     properties:
@@ -161,14 +218,119 @@ info:
   contact:
     email: hacktiv@swagger.io
     name: API Support
-  description: This is a API webservice to manage mygram API
+  description: This is a API webservice to manage KanBanBoard API
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
-  title: Mygram-API
+  title: KanBanBoard-API
   version: "1.0"
 paths:
+  /categories:
+    get:
+      consumes:
+      - application/json
+      description: Get All Category
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/domain.Category'
+                  type: array
+              type: object
+      summary: Get All Category
+      tags:
+      - Categories
+    post:
+      consumes:
+      - application/json
+      description: Create Category by Data Provided
+      parameters:
+      - description: Create Category
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/params.CategoryCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.Category'
+              type: object
+      summary: Create Category
+      tags:
+      - Categories
+  /categories/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Category by Data Provided
+      parameters:
+      - description: Delete Category
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Delete Category
+      tags:
+      - Categories
+    patch:
+      consumes:
+      - application/json
+      description: Patch Category by Data Provided
+      parameters:
+      - description: Patch Task Category
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/params.CategoryUpdate'
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.CategoryUpdateResponse'
+              type: object
+      summary: Patch Category
+      tags:
+      - Categories
   /tasks:
     get:
       consumes:

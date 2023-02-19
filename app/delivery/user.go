@@ -56,7 +56,7 @@ func (u *UserHandler) Register(ctx *gin.Context) {
 	copier.Copy(&user, &userRegister)
 	userData, err := u.userUsecase.Register(ctx.Request.Context(), &user)
 	if err != nil {
-		responses.Success(ctx, getStatusCode(err), err.Error(), "")
+		responses.Success(ctx, getStatusCode(err), err.Error(), nil)
 		return
 	}
 	responses.Success(ctx, http.StatusCreated, "User Registered.", userData)
@@ -86,7 +86,7 @@ func (u *UserHandler) RegisterAdmin(ctx *gin.Context) {
 	copier.Copy(&user, &userRegister)
 	userData, err := u.userUsecase.RegisterAdmin(ctx.Request.Context(), &user)
 	if err != nil {
-		responses.Success(ctx, getStatusCode(err), err.Error(), "")
+		responses.Success(ctx, getStatusCode(err), err.Error(), nil)
 		return
 	}
 	responses.Success(ctx, http.StatusCreated, "Admin Created.", userData)
@@ -116,7 +116,7 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 	copier.Copy(&user, &userLogin)
 	token, err := u.userUsecase.Login(ctx.Request.Context(), &user)
 	if err != nil {
-		responses.Success(ctx, getStatusCode(err), err.Error(), "")
+		responses.Success(ctx, getStatusCode(err), err.Error(), nil)
 		return
 	}
 	responses.Success(ctx, http.StatusOK, "Login Success.", token)
@@ -149,7 +149,7 @@ func (u *UserHandler) UpdateAccount(ctx *gin.Context) {
 	user.ID = userID
 	userData, err := u.userUsecase.UpdateUser(ctx.Request.Context(), &user)
 	if err != nil {
-		responses.Success(ctx, getStatusCode(err), err.Error(), "")
+		responses.Success(ctx, getStatusCode(err), err.Error(), nil)
 		return
 	}
 	responses.Success(ctx, http.StatusOK, "Account Updated.", userData)
@@ -167,10 +167,10 @@ func (u *UserHandler) DeleteAccount(ctx *gin.Context) {
 	userID := int64(userAuth["id"].(float64))
 	err := u.userUsecase.DeleteUser(ctx, userID)
 	if err != nil {
-		responses.Success(ctx, getStatusCode(err), err.Error(), "")
+		responses.Success(ctx, getStatusCode(err), err.Error(), nil)
 		return
 	}
-	responses.Success(ctx, http.StatusOK, "Your account has been successfully deleted.", "")
+	responses.Success(ctx, http.StatusOK, "Your account has been successfully deleted.", nil)
 }
 
 func getStatusCode(err error) int {

@@ -14,9 +14,9 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// @title Mygram-API
+// @title KanBanBoard-API
 // @version 1.0
-// @description This is a API webservice to manage mygram API
+// @description This is a API webservice to manage KanBanBoard API
 // @termsOfService http://swagger.io/terms/
 // @contact.name API Support
 // @contact.email hacktiv@swagger.io
