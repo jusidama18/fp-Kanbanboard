@@ -31,6 +31,17 @@ func main() {
 	config.StartDB()
 	db := config.GetDBConnection()
 
+	base_url := os.Getenv("BASE_URL")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	if base_url != "" {
+		docs.SwaggerInfo.Host = base_url
+	} else {
+		docs.SwaggerInfo.Host = fmt.Sprintf("localhost:%s", port)
+	}
+
 	userRepository := _repository.NewUserRepository(db)
 	userUsecase := _usecase.NewUserUsecase(userRepository)
 
@@ -46,15 +57,5 @@ func main() {
 
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	base_url := os.Getenv("BASE_URL")
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-	if base_url != "" {
-		docs.SwaggerInfo.Host = base_url
-	} else {
-		docs.SwaggerInfo.Host = fmt.Sprintf("localhost:%s", port)
-	}
 	router.Run(":" + port)
 }
